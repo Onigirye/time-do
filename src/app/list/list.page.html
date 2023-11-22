@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="onClickVoltar()">{{cat.name}}</ion-button>
+    </ion-buttons>
+    <ion-toggle slot="end" (ionChange)="toggleChange()"></ion-toggle>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list lines="full" *ngFor="let nome of lista">
+    <ion-item>
+      <ion-checkbox justify="start">{{nome.description}}</ion-checkbox>
+      <ion-button *ngIf="deleteMode">
+        <ion-icon slot="icon-only" name="trash" size="small" labelPlacement="end" (click)="onClickDelete(nome.id!)"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="addNewItem()">
+      <ion-icon size="large" name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

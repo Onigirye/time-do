@@ -2,10 +2,13 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'ionic-firebase-starter',
+  appName: 'time-do',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
+    // androidScheme: 'https',
+    url: "http://localhost:8100",
+    cleartext: true,
+    allowNavigation: ["*"]
   }
 };
 
