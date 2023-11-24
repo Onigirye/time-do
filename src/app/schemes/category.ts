@@ -14,12 +14,9 @@ export default {
         color: {
             type: "string"
         },
-        todos: {
-            type: 'array',
-            ref: 'task',
-            items: {
-                type: 'string'
-            }
+        user: {
+            ref: 'user',
+            type: 'string'
         }
     },
     required: [

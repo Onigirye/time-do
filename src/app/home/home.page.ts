@@ -45,10 +45,12 @@ export class HomePage {
     console.log(cat);
     //await this.storage.set("categoria", this.lista[id]);
     console.log('Itsumi Mario')
-    await this.storage.set("catId", cat.get('id'))
+
+
+    await this.storage.set("cat", cat.toJSON())
     console.log("setei")
 
-    await this.router.navigate(["/list"]);
+    this.router.navigate(["/list"]);
   }
 
   onClickAdd() {

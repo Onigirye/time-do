@@ -9,6 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import categorySchema from '../schemes/category';
 import taskSchema from '../schemes/task';
+import userSchema from '../schemes/user';
 
 addRxPlugin(RxDBDevModePlugin); //only in dev mode
 
@@ -56,6 +57,9 @@ export class DatabaseService {
         },
         tasks: {
           schema:taskSchema
+        },
+        users: {
+          schema:userSchema
         }
       });
 

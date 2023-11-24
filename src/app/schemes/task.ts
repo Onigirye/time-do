@@ -11,6 +11,9 @@ export default {
         name: {
             type: "string"
         },
+        done: {
+            type: "boolean"
+        },
         category: {
             ref: 'category',
             type: 'string'

@@ -76,13 +76,13 @@ export class CategoryDaoService {
   }
 
   async removeById(id:string){
-    const collectionCategory: RxCollection = this.database.getDatabase().categories;
+    const collectionCategory: RxCollection = await this.database.getDatabase().categories;
     const docdel =await collectionCategory.findOne({
       selector: {
         id
       }
     }).exec()
-    docdel.remove()
+    await docdel.remove()
   }
 
   async updateById(cat:any){
@@ -94,5 +94,7 @@ export class CategoryDaoService {
     }).exec()
     await docmod.modify(cat);
   }
+
+ 
 
 }
