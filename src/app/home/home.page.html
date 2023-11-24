@@ -5,27 +5,31 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  
   <ion-list>
-    <div *ngFor="let li of lista">
-      <ion-item-sliding>
-      <ion-item [button]="true" (click)="OnClickCard(li.id!)">
-        <ion-icon color="tertiary" slot="start" name="list-circle" size="large"></ion-icon>
-        <ion-label>{{li.name}}</ion-label>
+    <ion-item-sliding *ngFor="let cat of categories$ | async as categories">
+
+      <ion-item [button]="true" (click)="onClickItem(cat)">
+        <ion-icon color={{cat.color}} slot="start" name="list-circle" size="large">
+        </ion-icon>
+        <ion-label>{{cat.name}}</ion-label>
         <ion-note slot="end">0</ion-note>
       </ion-item>
-        <ion-item-options side="start">
-          <ion-item-option color="warning">Rename</ion-item-option>
-        </ion-item-options>
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="onClickDelete(li.id!)">Delete</ion-item-option>
+
+      <ion-item-options side="start">
+        <ion-item-option color="warning" (click)="onClickEdit(cat)">Rename</ion-item-option>
       </ion-item-options>
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="onClickDelete(cat)">Delete</ion-item-option>
+      </ion-item-options>
+
     </ion-item-sliding>
-    </div>
   </ion-list>
 
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="addNewCatedory()">
+    <ion-fab-button (click)="onClickAdd()">
       <ion-icon size="large" name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

@@ -2,7 +2,14 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { Category } from '../interfaces/category';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { ViewChild } from '@angular/core';
+import { IonModal } from '@ionic/angular';
+import { OverlayEventDetail } from '@ionic/core/components';
+import { v4 as uuidv4 } from 'uuid';
+import { CategoryDaoService } from '../services/category-dao.service';
+import { DatabaseService } from '../services/database.service';
+import { ModalCategoryComponent } from '../components/modal-category/modal-category.component';
 
 @Component({
   selector: 'app-home',
@@ -12,76 +19,134 @@ import { AlertController } from '@ionic/angular';
 
 
 export class HomePage {
-  categoria: string = '' 
+  nome: string = '';
+  categories$: any;
+  selectedColor: string = '';
+  categoria: string = ''
   lista: Category[] = []
-  alertButtons = ['OK'];
-  alertInputs = [
-    {
-      placeholder: 'Nome',
-    },
-  ];
+  colors: string[] = []
+
+  isModalOpen: boolean = false;
 
 
-  constructor(private router: Router, private storage: Storage, private alertController: AlertController) {
-    this.lista = [{
-      id: 0,
-      name: 'Casa'
-    }, {
-      id: 1,
-      name: 'Compras'
-    }, {
-      id: 2,
-      name: 'Escola'
-    }]
+  constructor(
+    private router: Router,
+    private storage: Storage,
+    private alertController: AlertController,
+    private categoryDao: CategoryDaoService,
+    private database: DatabaseService,
+    private modalCtrl: ModalController
+  ) {
+    this.colors = ['success', 'warning', 'danger', 'medium', 'light', 'purple', 'blue', 'coffee', 'aqua']
   }
 
+  async onClickItem(cat: any) {
+    // const nav = cat.id;
+    console.log(cat);
+    //await this.storage.set("categoria", this.lista[id]);
+    console.log('Itsumi Mario')
+    await this.storage.set("catId", cat.get('id'))
+    console.log("setei")
 
-  async OnClickCard(id: number) {
-    console.log("Happy");
-    await this.storage.set("categoria", this.lista[id]);
-    await this.router.navigate(["/list"],);
+    await this.router.navigate(["/list"]);
   }
 
-  onClickDelete(ident:number) {
-    const deleta = this.lista.filter(item => item.id !== ident)
-    this.lista = deleta
-    console.log(this.lista)
+  onClickAdd() {
+    console.log("click Add")
+    const cat: Category = {
+      id: uuidv4(),
+      name: '',
+      color: ''
+    }
+    this.openModal(cat, 'create')
+  }
+
+  onClickEdit(cat: any) {
+    console.log('click edit')
+    const editCat: Category = cat.toJSON()
+    this.openModal(editCat, 'edit')
+  }
+
+  onClickDelete(cat: any) {
+    console.log(cat)
+    const del = cat.get('id');
+    console.log(del)
+    this.categoryDao.removeById(del)
   }
 
   async presentAlert() {
-    const alert = await this.alertController.create({
-      header: "Nova categoria",
-      message: "Qual o nome da nova categoria",
-      inputs: [
-        {
-          name: "category",
-          type: 'text',
-          placeholder: "Categoria"
-        }],
-      buttons: [{
-        text: "Salvar",
-        role: "save",
-        handler: (res) => { console.log('nada') }
-      }, 'Cancel']
-    });
+    // const alert = await this.alertController.create({
+    //   header: "Nova categoria",
+    //   message: "Qual o nome da nova categoria",
+    //   inputs: [
+    //     {
+    //       name: "category",
+    //       type: 'text',
+    //       placeholder: "Categoria"
+    //     }],
+    //   buttons: [{
+    //     text: "Salvar",
+    //     role: "save",
+    //     handler: (res) => { console.log('nada') }
+    //   }, 'Cancel']
+    // });
 
-    await alert.present();
-    const result = await alert.onDidDismiss()
-    return result
+
+    // await alert.present();
+    // const result = await alert.onDidDismiss()
+    // return result
 
   }
 
-  async addNewCatedory() {
-    const {data, role} = await this.presentAlert()
-    console.log(role)
-    if( role== "save") {
-      console.log(data.values)
-      const { category } = data.values
-      const id = this.lista[this.lista.length -1].id + 1
-      this.lista.push({
-        id, name: category
-      })
+  async addNewCategory(cat: Category) {
+
+    this.categoryDao.insert(cat)
+  }
+
+  async editCategory(cat: Category) {
+
+    this.categoryDao.updateById(cat)
+  }
+
+  async upsertCategory(cat: Category) {
+
+    this.categoryDao.upsert(cat)
+  }
+  
+
+
+  
+
+  ionViewWillEnter() {
+    this.database.getDatabaseState().subscribe((ready) => {
+      if (ready) {
+        this.loadCategories()
+      }
+    })
+  }
+
+  async loadCategories() {
+    this.categories$ = await this.categoryDao.getObservable()
+    console.log(this.categories$)
+
+  }
+
+  async openModal(cat: Category, type: string) {
+    // let cat: Category = {}
+   
+    const modal = await this.modalCtrl.create({
+      component: ModalCategoryComponent,
+      cssClass: "modal-category",
+      componentProps: {...cat, type}
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      console.log(data)
+      await this.upsertCategory(data)
+
     }
-    console.log(this.lista)
   }
 }

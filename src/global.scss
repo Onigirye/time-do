@@ -24,3 +24,10 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+.modal-category{
+    --height: 55%;
+    // --width: 85%;
+    --border-radius: 10px;
+    margin: auto;
+  }
