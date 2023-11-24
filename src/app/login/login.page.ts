@@ -4,13 +4,15 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { User } from '../interfaces/user';
 import { DatabaseService } from '../services/database.service';
 import { UserDaoService } from '../services/user-dao.service';
+import { AuthenticationService } from '../services/authentication.service';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
   user: User = {
     login: '',
     password: '',
@@ -22,23 +24,32 @@ export class LoginPage implements OnInit {
     private database: DatabaseService,
     private userDao: UserDaoService,
     private toastController: ToastController,
-    private storage: Storage
+    private storage: Storage,
+    private authService: AuthenticationService,
   ){ 
   }
-
-  ngOnInit() {}
 
   async onClickEnter(){
    const {success, user} = await this.userDao.auth(this.user)
    console.log(success, user)
    if(success){
+
     await this.storage.set("user", user);
     await this.storage.set("token", user.login);
-    this.router.navigate(["/home"]);
+    await this.goToHomePage()
    }else{
     this.presentAlert("Senha e/ou Login incorretos")
    }
    
+  }
+
+
+  private async goToHomePage() {
+    this.authService.setAuthState(true);
+    this.router.navigateByUrl('/home', {
+      skipLocationChange: true,
+      replaceUrl: true,
+    });
   }
 
   async presentToast(message: string) {

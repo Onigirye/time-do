@@ -11,20 +11,29 @@
 <ion-content [fullscreen]="true">
 
   <ion-list lines="full" >
-    <ion-item *ngFor="let task of tasks$ | async as tasks">
-      <ion-checkbox [checked]= task.done labelPlacement="end" justify="start" (ionChange)="taskChange(task)">{{task.name}}</ion-checkbox>
-      <div>
-        <ion-input [(ngModel)]="task.dateStart" display-format="MMM DD, YYYY" slot="start"></ion-input>
-        <ion-input [(ngModel)]="task.dateEnd" display-format="MMM DD, YYYY" slot="start"></ion-input>
-      </div>
-      <ion-button *ngIf="deleteMode"  fill="clear" (click)="onClickDelete(task)">
-        <ion-icon slot="icon-only" name="trash" size="large" 
-          ></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="!deleteMode" fill="clear" (click)="onClickEdit(task)">
-        <ion-icon slot="icon-only" name="create" size="large"></ion-icon>
-      </ion-button>
-    </ion-item>
+    <div *ngFor="let task of tasks$ | async as tasks"> 
+      <ion-item lines="none">
+        <ion-checkbox [checked]= task.done labelPlacement="end" justify="start" (ionChange)="taskChange(task)">{{task.name}}</ion-checkbox>
+        <ion-button *ngIf="deleteMode"  fill="clear" (click)="onClickDelete(task)">
+          <ion-icon slot="icon-only" name="trash" size="large" 
+            ></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="!deleteMode" fill="clear" (click)="onClickEdit(task)">
+          <ion-icon slot="icon-only" name="create" size="large"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <!-- <ion-item>
+        <ion-badge slot="start">{{task.startDate}}</ion-badge>
+      </ion-item> -->
+      <!-- <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      <ion-modal [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime id="datetime"></ion-datetime>
+        </ng-template>
+      </ion-modal>
+      <ion-button fill="clear">{{task.dateStart}}</ion-button>
+      <ion-button fill="clear">{{task.dateEnd}}</ion-button> -->
+    </div>
     
   </ion-list>
 

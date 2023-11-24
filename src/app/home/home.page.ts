@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { CategoryDaoService } from '../services/category-dao.service';
 import { DatabaseService } from '../services/database.service';
 import { ModalCategoryComponent } from '../components/modal-category/modal-category.component';
+import { AuthenticationService } from '../services/authentication.service';
+import { User } from '../interfaces/user';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +28,9 @@ export class HomePage {
   lista: Category[] = []
   colors: string[] = []
 
+  user: User = {
+  }
+
   isModalOpen: boolean = false;
 
 
@@ -35,7 +40,8 @@ export class HomePage {
     private alertController: AlertController,
     private categoryDao: CategoryDaoService,
     private database: DatabaseService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private authService: AuthenticationService
   ) {
     this.colors = ['success', 'warning', 'danger', 'medium', 'light', 'purple', 'blue', 'coffee', 'aqua']
   }
@@ -101,7 +107,7 @@ export class HomePage {
   }
 
   async addNewCategory(cat: Category) {
-
+    
     this.categoryDao.insert(cat)
   }
 
@@ -111,7 +117,7 @@ export class HomePage {
   }
 
   async upsertCategory(cat: Category) {
-
+    cat.user = this.user.login
     this.categoryDao.upsert(cat)
   }
   
@@ -119,16 +125,21 @@ export class HomePage {
 
   
 
-  ionViewWillEnter() {
-    this.database.getDatabaseState().subscribe((ready) => {
+  async ionViewWillEnter() {
+    this.database.getDatabaseState().subscribe(async (ready) => {
       if (ready) {
-        this.loadCategories()
+        this.user = await this.storage.get('user')
+        await  this.loadCategories()
       }
     })
+
+    
+    console.log(this.user)
   }
 
   async loadCategories() {
-    this.categories$ = await this.categoryDao.getObservable()
+    console.log(this.user.login)
+    this.categories$ = await this.categoryDao.getObservable(this.user.login)
     console.log(this.categories$)
 
   }
@@ -150,5 +161,12 @@ export class HomePage {
       await this.upsertCategory(data)
 
     }
+  }
+
+  async logout(){
+    this.storage.remove('user')
+    this.storage.remove('token')
+    this.authService.setAuthState(false)
+
   }
 }

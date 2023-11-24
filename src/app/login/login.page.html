@@ -5,24 +5,24 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-    <div>
+    <!-- <div>
       <h1>Login </h1>
       <h2>Digite seu Usuário e Senha</h2>
-    </div>
+    </div> -->
 
     <div>
       <ion-list>
         <ion-item>
-          <ion-input [(ngModel)]="user.login" label="Usuário" label-placement="floating" fill="solid" placeholder="Enter text"></ion-input>
+          <ion-input class="custom-input" [(ngModel)]="user.login" label="Usuário" label-placement="floating" fill="solid" placeholder="Digite o login"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input [(ngModel)]="user.password" label="Senha" label-placement="floating" fill="solid" placeholder="Enter text"
+          <ion-input [(ngModel)]="user.password" label="Senha" label-placement="floating" fill="solid" placeholder="Digite a senha"
             type="password"></ion-input>
         </ion-item>
       </ion-list>
     </div>
 
-    <ion-item>
+    <ion-item lines="none">
       <ion-button fill="clear" slot="start" size="small" (click)="onClickCadastrar()">Cadastre-se</ion-button>
       <ion-button fill="clear" slot="end" size="large" color="success" shape="round" (click)="onClickEnter()">Entrar</ion-button>
     </ion-item>

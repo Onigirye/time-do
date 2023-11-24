@@ -1,6 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="secondary">
-    <ion-title>Time-Do List</ion-title>
+    <ion-title>Lista de {{this.user.name}}</ion-title>
+    <ion-button color="danger" fill="clear" slot="end" (click)="logout()">
+      <ion-icon size="large"name="log-out" aria-hidden="true"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -13,7 +16,7 @@
         <ion-icon color={{cat.color}} slot="start" name="list-circle" size="large">
         </ion-icon>
         <ion-label>{{cat.name}}</ion-label>
-        <ion-note slot="end">0</ion-note>
+        <!-- <ion-note slot="end">0</ion-note> -->
       </ion-item>
 
       <ion-item-options side="start">

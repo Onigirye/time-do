@@ -14,6 +14,13 @@ export default {
         done: {
             type: "boolean"
         },
+        // startDate: {
+        //     type: "boolean"
+        // },
+        // endDate: {
+        //     type: "boolean"
+        // },
+
         category: {
             ref: 'category',
             type: 'string'

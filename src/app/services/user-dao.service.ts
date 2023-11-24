@@ -38,7 +38,7 @@ export class UserDaoService {
   }
   async auth(user: User) {
     const userCollection: RxCollection = await this.database.getDatabase().users
-
+    console.log(user)
     const userDoc = await userCollection.findOne({                 // query
       selector: {
         login: { $eq: user.login },
@@ -46,11 +46,14 @@ export class UserDaoService {
       },
     }).exec()
     console.log(userDoc)
-    if (user != null) {
-      return {success: true, user : userDoc.toJSON()}
+  
+    if (userDoc != null) {
+      const authUser = userDoc.toJSON()
+      return {success: true, user :authUser }
     }else{
       return {success: false, user: {}}
     }
+
 
   }
 

@@ -19,11 +19,13 @@ export class CategoryDaoService {
 
 
 
-  async getObservable(){
+  async getObservable(login:any){
     const categories$ = this.database.getDatabase()
     .categories                // collection
     .find({                 // query
-        selector: {},
+        selector: {
+          user: { $eq: login }
+        },
         sort: [{ name: 'asc' }]
     })
     .$;
